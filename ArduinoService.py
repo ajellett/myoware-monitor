@@ -9,8 +9,10 @@ import serial
 from SimulatedSignal import SimulatedSignal
 
 class ArduinoService:
+    port = 'COM3'
+    baudrate = 9600
     
-    def __init__(self, port='COM4', baudrate=115200):
+    def __init__(self, port='COM3', baudrate=9600):
     
         print("Attempting to connect to serial device on port " + port)
         try:
@@ -21,10 +23,14 @@ class ArduinoService:
             self.simulator = SimulatedSignal()
             
     def read(self):
-        if self.simulator.isRunning:
-            return self.simulator.read()
-        else:
+        self.ser = serial.Serial(ArduinoService.port, ArduinoService.baudrate, timeout=0.1)
+
+        if self.ser.readline():
             return self.ser.readline()
+        else:
+            self.simulator.isRunning
+            return self.simulator.read()
+
     
     def close(self):
         self.ser.close()

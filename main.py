@@ -26,11 +26,12 @@ if __name__ == '__main__':
     
     # start the Arduino Live/Simulated interface
     arduino = ArduinoService()
-    contraction_threshold = 0.5 if arduino.simulator.isRunning else 500
+    contraction_threshold = .500
+    #0.5 if arduino.simulator.isRunning else 500
     
     # start matplotlib object
     grapher = Grapher(data=buffer,
-                      sample_rate = arduino.simulator.sample_rate,
+                      sample_rate = 9600, #arduino.simulator.sample_rate,
                       threshold=contraction_threshold)
     
     def add_value_to_buffer():
@@ -40,9 +41,10 @@ if __name__ == '__main__':
         grapher.meetsThreshold = True if new_value >= contraction_threshold else False
         grapher.update_data(buffer)
         
-        Timer(1.0/arduino.simulator.sample_rate, add_value_to_buffer).start()
+        #arduino.simulator.sample_rate
+        # Timer(1.0/9600, add_value_to_buffer).start()
         
     # loop the buffer update
-    Timer(1.0/arduino.simulator.sample_rate, add_value_to_buffer).start()
+    Timer(1.0/9600, add_value_to_buffer).start()
     
     grapher.run()
